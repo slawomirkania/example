@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @ApiResource()
@@ -20,6 +21,7 @@ class Account
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @NotBlank(message="Please provide username")
      */
     private $username;
 
