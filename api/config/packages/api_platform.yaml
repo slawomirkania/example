@@ -19,3 +19,8 @@ api_platform:
         shared_max_age: 3600
         vary: ['Content-Type', 'Authorization']
         public: true
+    formats:
+        jsonld:   ['application/ld+json']
+        json:     ['application/json']
+        html:     ['text/html']
+        jsonhal:  ['application/hal+json']
