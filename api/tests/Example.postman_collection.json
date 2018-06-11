@@ -156,6 +156,103 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "4. /accounts - filter - unfiltered list of accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Unfiltered list of accounts\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.totalItems).to.eql(20);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/hal+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/accounts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"accounts"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "5. /accounts - filter - filtered list of accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Filtered list of accounts\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.totalItems).to.eql(10);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/hal+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/accounts?isActive=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "isActive",
+							"value": "false",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
