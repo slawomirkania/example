@@ -24,3 +24,7 @@ api_platform:
         json:     ['application/json']
         html:     ['text/html']
         jsonhal:  ['application/hal+json']
+    collection:
+        pagination:
+            items_per_page: 10
+            client_items_per_page: true
