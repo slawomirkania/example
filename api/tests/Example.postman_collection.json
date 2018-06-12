@@ -253,6 +253,117 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "6. /roles - filter - by subresource property",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Only active users roles\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.totalItems).to.eql(2); // all users (only one for now) with ROLE_ADMIN are not active, so this role will not appear in the collection ",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/hal+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/roles?accounts.isActive=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"roles"
+					],
+					"query": [
+						{
+							"key": "accounts.isActive",
+							"value": "true",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "7. /roles - filter - by subresource property - application/json header",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Only active users roles\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    var roleSymbols = [];",
+							"    jsonData.forEach(function(elem){ ",
+							"        roleSymbols.push(elem.symbol);",
+							"    })",
+							"    pm.expect(roleSymbols.length).to.eql(2);",
+							"    pm.expect(roleSymbols.includes('ROLE_SUPER_ADMIN')).to.be.true;",
+							"    pm.expect(roleSymbols.includes('ROLE_USER')).to.be.true;",
+							"    pm.expect(roleSymbols.includes('ROLE_ADMIN')).to.be.false;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/roles?accounts.isActive=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"roles"
+					],
+					"query": [
+						{
+							"key": "accounts.isActive",
+							"value": "true",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
