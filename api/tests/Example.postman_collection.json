@@ -41,12 +41,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/accounts",
-					"protocol": "http",
+					"raw": "{{url}}/accounts",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"accounts"
 					]
@@ -86,12 +84,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/accounts",
-					"protocol": "http",
+					"raw": "{{url}}/accounts",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"accounts"
 					]
@@ -131,12 +127,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/accounts?page=1&itemsPerPage=5",
-					"protocol": "http",
+					"raw": "{{url}}/accounts?page=1&itemsPerPage=5",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"accounts"
 					],
@@ -188,12 +182,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/accounts",
-					"protocol": "http",
+					"raw": "{{url}}/accounts",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"accounts"
 					]
@@ -233,12 +225,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/accounts?isActive=false",
-					"protocol": "http",
+					"raw": "{{url}}/accounts?isActive=false",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"accounts"
 					],
@@ -285,12 +275,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/roles?accounts.isActive=true",
-					"protocol": "http",
+					"raw": "{{url}}/roles?accounts.isActive=true",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"roles"
 					],
@@ -344,12 +332,10 @@
 					"raw": "{\n  \"username\": \"\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/roles?accounts.isActive=true",
-					"protocol": "http",
+					"raw": "{{url}}/roles?accounts.isActive=true",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"roles"
 					],
@@ -359,6 +345,154 @@
 							"value": "true",
 							"equals": true
 						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "8. /accounts - serialization|deserialization - post error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Error when empty username\", function () {",
+							"    pm.response.to.have.status(400);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql('password: Please provide password');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{$guid}}\",\n  \"isActive\": true,\n  \"password\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "9. /accounts - serialization|deserialization - post success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Account created successfully and we do not have password property in response object\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('username');",
+							"    pm.expect(jsonData).to.have.property('isActive');",
+							"    pm.expect(jsonData).to.have.property('roles');",
+							"    pm.expect(jsonData).to.not.have.property('password');",
+							"    ",
+							"    postman.setEnvironmentVariable(\"account_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{$guid}}\",\n  \"isActive\": true,\n  \"password\": \"asdf1234\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "10. /accounts - serialization|deserialization - put update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Update created account in previous step\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isActive).to.be.equal(false);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"isActive\": false\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
 					]
 				},
 				"description": ""
