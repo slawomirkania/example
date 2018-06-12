@@ -14,6 +14,7 @@ class AccountFixtures extends Fixture
             $account = new Account();
             $account->setUsername('jonsnow_'.$i);
             $account->setIsActive(0 == $i % 2 ? false : true);
+            $account->setPassword(md5((new \DateTime())->getTimestamp()));
             $manager->persist($account);
             $this->addReference('account_'.$i, $account);
         }
