@@ -15,6 +15,7 @@ class AccountFixtures extends Fixture
             $account->setUsername('jonsnow_'.$i);
             $account->setIsActive(0 == $i % 2 ? false : true);
             $manager->persist($account);
+            $this->addReference('account_'.$i, $account);
         }
 
         $manager->flush();
