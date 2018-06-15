@@ -58,10 +58,13 @@ class Account
     private $isActive;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="accounts")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="accounts", cascade={"persist"})
      * @ApiSubresource(maxDepth=1)
      * @Groups({
-     *     "account.read"
+     *     "account.read",
+     *     "account.write",
+     *
+     *     "account.update"
      * })
      */
     private $roles;
