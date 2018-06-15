@@ -15,7 +15,8 @@
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
-        "api-platform/schema-generator": "^2.1"
+        "api-platform/schema-generator": "^2.1",
+        "doctrine/doctrine-fixtures-bundle": "^3.0"
     },
     "config": {
         "preferred-install": {
