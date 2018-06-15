@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "1. /accounts - validation - empty usernam",
+			"name": "1. /accounts - validation - empty username",
 			"event": [
 				{
 					"listen": "test",
@@ -18,7 +18,7 @@
 							"    pm.response.to.have.status(400);",
 							"    pm.response.to.be.json;",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.detail).to.eql('username: Please provide username');",
+							"    pm.expect(jsonData.detail).to.eql('username: Please provide username\\npassword: Please provide password');",
 							"});"
 						]
 					}
@@ -61,7 +61,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Correct amount of page items\", function () {",
+							"pm.test(\"Pagination - Correct amount of page items\", function () {",
 							"    pm.response.to.have.status(200);",
 							"    pm.response.to.be.json;",
 							"    var jsonData = pm.response.json();",
@@ -104,7 +104,7 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Control items per page from client Point Of View\", function () {",
+							"pm.test(\"Pagination - Control items per page from client Point Of View\", function () {",
 							"    pm.response.to.have.status(200);",
 							"    pm.response.to.be.json;",
 							"    var jsonData = pm.response.json();",
@@ -352,7 +352,7 @@
 			"response": []
 		},
 		{
-			"name": "8. /accounts - serialization|deserialization - post error",
+			"name": "8. /accounts - serialization - post error",
 			"event": [
 				{
 					"listen": "test",
@@ -399,7 +399,7 @@
 			"response": []
 		},
 		{
-			"name": "9. /accounts - serialization|deserialization - post success",
+			"name": "9. /accounts - serialization - post success",
 			"event": [
 				{
 					"listen": "test",
@@ -452,7 +452,7 @@
 			"response": []
 		},
 		{
-			"name": "10. /accounts - serialization|deserialization - put update",
+			"name": "10. /accounts - serialization - put update",
 			"event": [
 				{
 					"listen": "test",
@@ -493,6 +493,387 @@
 					"path": [
 						"accounts",
 						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "11. /accounts - delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Deleting account\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "12. /roles - get roles for further tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Getting roles for further tests\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach(function(role){ ",
+							"        switch(role.symbol) {",
+							"            case 'ROLE_SUPER_ADMIN':",
+							"                postman.setEnvironmentVariable(\"role_super_admin_id\", role.id);",
+							"                break;",
+							"            case 'ROLE_ADMIN':",
+							"                postman.setEnvironmentVariable(\"role_admin_id\", role.id);",
+							"                break;",
+							"            case 'ROLE_USER':",
+							"                postman.setEnvironmentVariable(\"role_user_id\", role.id);",
+							"                break;",
+							"        }",
+							"    })",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/roles",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"roles"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "13. /accounts - deserialization - create account and attach role in one request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Create account and attach role in one request\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"roles\");",
+							"    pm.expect(jsonData.roles.length).to.be.equal(3);",
+							"    ",
+							"    postman.setEnvironmentVariable(\"account_id\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"{{$guid}}\",\n  \"isActive\": true,\n  \"password\": \"asdf1234\",\n  \"roles\": [\n\t{\n\t\t\"id\": \"{{role_super_admin_id}}\"\n\t},\n\t{\n\t\t\"id\": \"{{role_admin_id}}\"\n\t},\n\t{\n\t\t\"id\": \"{{role_user_id}}\"\n\t}\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "14. /accounts - deserialization - attach role to existing account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Attach role to existing account\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"roles\");",
+							"    pm.expect(jsonData.roles.length).to.be.equal(2);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"roles\": [\n\t{\n\t\t\"id\": \"{{role_super_admin_id}}\"\n\t},\n\t{\n\t\t\"id\": \"{{role_user_id}}\"\n\t}\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "15. /accounts - deserialization - overwrite roles of existing account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Overwrite roles of existing account\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"roles\");",
+							"    pm.expect(jsonData.roles.length).to.be.equal(1);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"roles\": [\n\t{\n\t\t\"id\": \"{{role_super_admin_id}}\"\n\t}\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "16. /accounts - delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Deleting account\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "17. /accounts - check if account exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Check if account exists\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/accounts/{{account_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"accounts",
+						"{{account_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "18. /roles - check roles amount after remove account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Check roles amount after remove account\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.be.equal(3);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/roles",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"roles"
 					]
 				},
 				"description": ""

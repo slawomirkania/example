@@ -35,7 +35,12 @@ class Role
      * @ORM\Column(type="string", length=255)
      * @Groups({
      *     "role.read",
-     *     "role.write"
+     *     "role.write",
+     *
+     *     "account.read",
+     *     "account.write",
+     *
+     *     "account.update"
      * })
      */
     private $symbol;
@@ -44,7 +49,12 @@ class Role
      * @ORM\Column(type="text", nullable=true)
      * @Groups({
      *     "role.read",
-     *     "role.write"
+     *     "role.write",
+     *
+     *     "account.read",
+     *     "account.write",
+     *
+     *     "account.update"
      * })
      */
     private $description;
