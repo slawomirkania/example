@@ -21,10 +21,9 @@ api_platform:
         public: true
     formats:
         jsonld:   ['application/ld+json']
-        json:     ['application/json']
+        json:     ['application/json', 'multipart/form-data']
         html:     ['text/html']
         jsonhal:  ['application/hal+json']
-        multipart:  ['multipart/form-data']
     collection:
         pagination:
             items_per_page: 10
